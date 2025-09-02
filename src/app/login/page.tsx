@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
+import Image from "next/image";
 
 const LoginPage: React.FC = () => {
   const [showPassword, setShowPassword] = useState(false);
@@ -81,7 +82,14 @@ const LoginPage: React.FC = () => {
 
       {/* Header */}
       <header className="w-full bg-black py-5 text-center text-white z-10 flex items-center justify-center space-x-3">
-        <img src="/assets/dfu_logo.jpeg" alt="DFU Logo" className="w-12 h-auto" />
+        {/* <Image  src="/assets/dfu_logo.jpeg" alt="DFU Logo" className="w-12 h-auto" /> */}
+        <Image
+    src="/assets/dfu_logo.jpeg"
+    alt="DFU Logo"
+    width={48}   // required by Next.js
+    height={48}  // required by Next.js
+    className="w-12 h-auto"
+  />
         <h1 className="text-2xl font-bold">
           Diabetic Foot Ulcer Detection (DFU)
         </h1>

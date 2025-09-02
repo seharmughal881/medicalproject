@@ -1,21 +1,21 @@
 "use client";
 
 import Link from "next/link";
-import { useRouter } from "next/navigation"; 
+// import { useRouter } from "next/navigation"; 
 
 import { Brain, Shield, Clock, CheckCircle2 } from "lucide-react";
 export default function DFUPage() {
-   const router = useRouter();
+  //  const router = useRouter();
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
+  // const handleSubmit = (e: React.FormEvent) => {
+  //   e.preventDefault();
 
-    // Example action
-    console.log("Form submitted ✅");
+  //   // Example action
+  //   console.log("Form submitted ✅");
 
-    // Redirect after submit
-    router.push("/register"); 
-  };
+  //   // Redirect after submit
+    // router.push("/register"); 
+  // };
   const features = [
     {
       icon: <Brain className="w-10 h-10 text-black" />,
@@ -211,3 +211,4 @@ export default function DFUPage() {
     </div>
   );
 }
+

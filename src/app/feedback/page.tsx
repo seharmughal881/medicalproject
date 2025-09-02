@@ -13,10 +13,7 @@ interface Doctor {
   profileImg?: string;
 }
 
-interface User {
-  id: string;
-  name: string;
-}
+
 
 export default function Feedback() {
   const [doctors, setDoctors] = useState<Doctor[]>([]);
@@ -43,47 +40,64 @@ export default function Feedback() {
   };
 
   // Submit feedback
-  const handleFeedbackSubmit = async (doctorId: string) => {
-    try {
-      const feedback = feedbacks[doctorId];
-      if (!feedback) {
-        alert("Please write feedback before submitting!");
-        return;
-      }
+interface User {
+  id: string;
+  name: string;
+}
 
-      const token = localStorage.getItem("token");
-      const user: User | null = JSON.parse(localStorage.getItem("user") || "null");
+interface FeedbackResponse {
+  success: boolean;
+  message: string;
+}
 
-      if (!user || !token) {
-        alert("User not logged in!");
-        return;
-      }
 
-      const response = await fetch("http://localhost:8080/api/feedback", {
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          doctor: doctorId,
-          patient: user.id,
-          patientName: user.name,
-          feedback,
-        }),
-      });
-
-      const data = await response.json();
-      if (data.success) {
-        alert("Feedback submitted successfully!");
-        setFeedbacks({ ...feedbacks, [doctorId]: "" });
-      } else {
-        throw new Error(data.message);
-      }
-    } catch (error: any) {
-      alert("Error submitting feedback: " + error.message);
+const handleFeedbackSubmit = async (doctorId: string) => {
+  try {
+    const feedback = feedbacks[doctorId];
+    if (!feedback) {
+      alert("Please write feedback before submitting!");
+      return;
     }
-  };
+
+    const token = localStorage.getItem("token");
+    const user: User | null = JSON.parse(localStorage.getItem("user") || "null");
+
+    if (!user || !token) {
+      alert("User not logged in!");
+      return;
+    }
+
+    const response = await fetch("http://localhost:8080/api/feedback", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+      body: JSON.stringify({
+        doctor: doctorId,
+        patient: user.id,
+        patientName: user.name,
+        feedback,
+      }),
+    });
+
+    const data: FeedbackResponse = await response.json();
+
+    if (data.success) {
+      alert("Feedback submitted successfully!");
+      setFeedbacks({ ...feedbacks, [doctorId]: "" });
+    } else {
+      throw new Error(data.message);
+    }
+  } catch (error: unknown) {
+    if (error instanceof Error) {
+      alert("Error submitting feedback: " + error.message);
+    } else {
+      alert("An unexpected error occurred.");
+    }
+  }
+};
+
 
   return (
     <div className="min-h-screen bg-gray-100 p-6">

@@ -104,12 +104,18 @@ export default function AvailabilitySchedule() {
         setError("");
         alert("Availability saved successfully!");
       }
-    } catch (err: any) {
-      console.error("Error details:", err.response || err);
-      setError(err.response?.data?.message || "Failed to save availability");
-    } finally {
-      setLoading(false);
-    }
+} catch (err: unknown) {
+  if (axios.isAxiosError(err)) {
+    console.error("Error details:", err.response || err);
+    setError(err.response?.data?.message || "Failed to save availability");
+  } else {
+    console.error("Unexpected error:", err);
+    setError("An unexpected error occurred");
+  }
+} finally {
+  setLoading(false);
+}
+
   };
 
   return (

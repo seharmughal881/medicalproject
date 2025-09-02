@@ -344,11 +344,10 @@ const DiabetesInfoForm: React.FC = () => {
           >
             {previewUrl ? (
               <div className="flex flex-col items-center gap-4">
-                <img
-                  src={previewUrl}
+                
+                <Image  src={previewUrl}
                   alt="Preview"
-                  className="w-40 h-40 object-cover rounded-lg border"
-                />
+                  className="w-40 h-40 object-cover rounded-lg border"/>
                 <p className="text-sm text-gray-600">{selectedFile?.name}</p>
                 <button
                   onClick={() => {

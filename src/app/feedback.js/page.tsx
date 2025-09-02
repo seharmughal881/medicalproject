@@ -3,16 +3,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
 
-interface Feedback {
-  patientName: string;
-  feedback: string;
-  createdAt: string;
-}
 
 export default function ViewFeedback() {
-  const [feedbacks, setFeedbacks] = useState<Feedback[]>([]);
-  const [error, setError] = useState("");
-  const [loading, setLoading] = useState(false);
+  const [feedbacks, setFeedbacks] = useState<
+    { patientName: string; feedback: string; createdAt: string }[]
+  >([]);
+  const [error, setError] = useState<string>("");
+  const [loading, setLoading] = useState<boolean>(false);
 
   useEffect(() => {
     fetchFeedbacks();
@@ -29,21 +26,20 @@ export default function ViewFeedback() {
         return;
       }
 
-      const parsedUser = JSON.parse(user);
+      const parsedUser: { id: string } = JSON.parse(user);
 
-      const response = await axios.get(
-        `http://localhost:8080/api/feedback/doctor/${parsedUser.id}`,
-        {
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
+      const response = await axios.get<
+        { patientName: string; feedback: string; createdAt: string }[]
+      >(`http://localhost:8080/api/feedback/doctor/${parsedUser.id}`, {
+        headers: { Authorization: `Bearer ${token}` },
+      });
 
       setFeedbacks(response.data);
       setError("");
-    } catch (err: any) {
-      setError("Error fetching feedbacks: " + err.message);
+    } catch (err) {
+      const errorMessage =
+        (err as { message?: string }).message || "Error fetching feedbacks";
+      setError("Error fetching feedbacks: " + errorMessage);
     } finally {
       setLoading(false);
     }
@@ -66,9 +62,7 @@ export default function ViewFeedback() {
               <h3 className="text-lg font-semibold text-black">
                 {feedback.patientName}
               </h3>
-              <p className="italic text-gray-700 mt-2">
-                {feedback.feedback}
-              </p>
+              <p className="italic text-gray-700 mt-2">{feedback.feedback}</p>
               <p className="text-sm text-gray-500 mt-3">
                 Date: {new Date(feedback.createdAt).toLocaleDateString()}
               </p>
