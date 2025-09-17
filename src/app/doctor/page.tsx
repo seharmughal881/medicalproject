@@ -22,7 +22,7 @@ export default function DoctorDashboard() {
       <main className="flex flex-col items-center justify-center flex-1 p-8">
         <h2 className="text-2xl font-semibold mb-8">Welcome, Doctor</h2>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-6xl">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl">
           {/* Availability Schedule */}
           <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 shadow-md flex flex-col items-center">
             <h3 className="text-lg font-bold mb-2">Availability Schedule</h3>
@@ -50,7 +50,16 @@ export default function DoctorDashboard() {
           </div>
 
           {/* Patient Records */}
-         
+         <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 shadow-md flex flex-col items-center">
+            <h3 className="text-lg font-bold mb-2">Access Patient Records</h3>
+            <p className="text-sm text-gray-400 text-center mb-4">
+View patient by their email and their record           </p>
+           <button className="bg-white text-black font-bold px-4 py-2 rounded-md hover:bg-gray-200">
+  <Link href="/emailrecord">
+    Patient Records
+  </Link>
+</button>
+          </div>
 
           {/* Feedback */}
           <div className="bg-gray-900 border border-gray-700 rounded-2xl p-6 shadow-md flex flex-col items-center">

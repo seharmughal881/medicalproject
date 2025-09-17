@@ -1,5 +1,4 @@
 "use client";
-
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
@@ -47,16 +46,44 @@ const LoginPage: React.FC = () => {
       }
 
       // ✅ Save token in localStorage
-      localStorage.setItem("token", data.token);
+      // localStorage.setItem("token", data.token);
+      // function bana lo login file me
+// Inside handleSubmit after successful login:
+if (data.user.role === "patient" || data.user.role === "Patient") {
+  // save in array instead of single value
+  const stored = localStorage.getItem("patientEmails");
+  const arr: string[] = stored ? JSON.parse(stored) : [];
+  if (!arr.includes(data.user.email)) { // avoid duplicates
+    arr.push(data.user.email);
+    localStorage.setItem("patientEmails", JSON.stringify(arr));
+  }
+
+  router.push("/diabetes-info");
+}
 
       alert("Login successful!");
 
       // ✅ role-based redirect (from backend response)
       if (data.user.role === "patient" || data.user.role === "Patient") {
+          localStorage.setItem("patientEmail", data.user.email);
+          // After login response
+
+
         router.push("/diabetes-info");
-      } else if (data.user.role === "doctor" || data.user.role === "Doctor") {
-        router.push("/doctor");
-      } else if (data.user.role === "admin" || data.user.role === "Admin") {
+        
+      } 
+      // else if (data.user.role === "doctor" || data.user.role === "Doctor") {
+      //   router.push("/doctor");    
+      // } 
+      else
+         if (data.user.role === "doctor" || data.user.role === "Doctor") {
+  // doctor ka sara data save
+  localStorage.setItem("doctorData", JSON.stringify(data.user));
+
+  router.push("/doctor");  // redirect doctor dashboard pe
+}
+
+      else if (data.user.role === "admin" || data.user.role === "Admin") {
         router.push("/dashboard/admin");
       }
     } catch (error) {
@@ -82,7 +109,6 @@ const LoginPage: React.FC = () => {
 
       {/* Header */}
       <header className="w-full bg-black py-5 text-center text-white z-10 flex items-center justify-center space-x-3">
-        {/* <Image  src="/assets/dfu_logo.jpeg" alt="DFU Logo" className="w-12 h-auto" /> */}
         <Image
     src="/assets/dfu_logo.jpeg"
     alt="DFU Logo"
