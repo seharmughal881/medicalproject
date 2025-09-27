@@ -142,7 +142,7 @@ export default function ViewHistory() {
           />
           <button
             onClick={fetchPatientHistory}
-            className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800"
+            className="bg-black text-white px-5 py-2 rounded-md hover:bg-gray-800 cursor-pointer disabled:opacity-50"
             disabled={loading}
           >
             {loading ? "Fetching..." : "Fetch"}

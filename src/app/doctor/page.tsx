@@ -11,7 +11,7 @@ export default function DoctorDashboard() {
       <header className="flex justify-between items-center px-6 py-4 bg-gray-900 shadow-md">
         <h1 className="text-2xl font-bold">Doctor Dashboard</h1>
         <button
-          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 rounded-md font-semibold"
+          className="bg-red-600 hover:bg-red-700 text-white px-4 py-2 cursor-pointer rounded-md font-semibold"
           onClick={() => router.push("/login")}
         >
           Logout
@@ -68,7 +68,7 @@ View patient by their email and their record           </p>
               Review feedback provided by your patients.
             </p>
            <button className="bg-white text-black font-bold px-4 py-2 rounded-md hover:bg-gray-200">
-  <Link href="/feedback">
+  <Link href="/feedbacks">
     View Feedback
   </Link>
 </button>

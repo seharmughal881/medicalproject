@@ -1,6 +1,7 @@
 "use client";
 import { useState, DragEvent, ChangeEvent, useEffect } from "react";
 import Image from "next/image";
+import Link from "next/link";
 
 // 🔹 Helper Hook for LocalStorage persistence
 function usePersistedState<T>(key: string, defaultValue: T) {
@@ -20,6 +21,20 @@ function usePersistedState<T>(key: string, defaultValue: T) {
 }
 
 const DiabetesInfoForm: React.FC = () => {
+  const resetForm = () => {
+  setDiabetesType("");
+  setBloodSugarControl("");
+  setFootUlcers("");
+  setSymptoms("");
+  setSymptomDuration("");
+  setLocation("");
+  setPainLevel(null);
+  setDiabetesDuration("");
+  setNotes("");
+  setSelectedFile(null);
+  setPreviewUrl(null);
+};
+
   // ===== States (Persisted) =====
   const [diabetesType, setDiabetesType] = usePersistedState("diabetesType", "");
   const [bloodSugarControl, setBloodSugarControl] = usePersistedState("bloodSugarControl", "");
@@ -53,125 +68,69 @@ const DiabetesInfoForm: React.FC = () => {
   };
 
   // ===== Submit Handler =====
-  // const handleSubmit = async (e: React.FormEvent) => {
-  //   e.preventDefault();
-
-  //   try {
-  //     const formData = new FormData();
-  //     formData.append("diabetesType", diabetesType);
-  //     formData.append("bloodSugarControl", bloodSugarControl);
-  //     formData.append("footUlcers", footUlcers);
-  //     formData.append("symptoms", symptoms);
-  //     formData.append("symptomDuration", symptomDuration);
-  //     formData.append("location", location);
-  //     formData.append("painLevel", painLevel !== null ? painLevel.toString() : "");
-  //     formData.append("diabetesDuration", diabetesDuration);
-  //     formData.append("notes", notes);
-
-  //     // ✅ Add patient email (from localStorage)
-  //     const patientEmail = localStorage.getItem("patientEmail");
-  //     if (patientEmail) {
-  //       formData.append("email", patientEmail);
-  //     }
-
-  //     if (selectedFile) {
-  //       formData.append("file", selectedFile);
-  //     }
-
-  //     const response = await fetch("http://localhost:5000/api/diabetes/", {
-  //       method: "POST",
-  //       headers: {
-  //         Authorization: `Bearer ${localStorage.getItem("token")}`,
-  //       },
-  //       body: formData,
-  //     });
-
-  //     if (!response.ok) {
-  //       const errText = await response.text();
-  //       throw new Error(`Error ${response.status}: ${errText}`);
-  //     }
-
-  //     const data = await response.json();
-  //     console.log("API Response:", data);
-  //     alert("Your information has been submitted successfully!");
-  //   } catch (error) {
-  //     console.error("Submission failed:", error);
-  //     alert("Failed to submit data. Please try again.");
-  //   }
-  // };
-
   const handleSubmit = async (e: React.FormEvent) => {
-  e.preventDefault();
+    e.preventDefault();
 
-  try {
-    const formData = new FormData();
-    formData.append("diabetesType", diabetesType);
-    formData.append("bloodSugarControl", bloodSugarControl);
-    formData.append("footUlcers", footUlcers);
-    formData.append("symptoms", symptoms);
-    formData.append("symptomDuration", symptomDuration);
-    formData.append("location", location);
-    formData.append("painLevel", painLevel !== null ? painLevel.toString() : "");
-    formData.append("diabetesDuration", diabetesDuration);
-    formData.append("notes", notes);
+    try {
+      const formData = new FormData();
+      formData.append("diabetesType", diabetesType);
+      formData.append("bloodSugarControl", bloodSugarControl);
+      formData.append("footUlcers", footUlcers);
+      formData.append("symptoms", symptoms);
+      formData.append("symptomDuration", symptomDuration);
+      formData.append("location", location);
+      formData.append("painLevel", painLevel !== null ? painLevel.toString() : "");
+      formData.append("diabetesDuration", diabetesDuration);
+      formData.append("notes", notes);
 
-    const patientEmail = localStorage.getItem("patientEmail");
-    if (patientEmail) {
-      formData.append("email", patientEmail);
+      // ✅ Add patient email (from localStorage)
+      const patientEmail = localStorage.getItem("patientEmail");
+      if (patientEmail) {
+        formData.append("email", patientEmail);
+      }
+
+      if (selectedFile) {
+        formData.append("file", selectedFile);
+      }
+
+      
+      const token = localStorage.getItem("token"); // after login you must save token 
+            const response = await fetch("http://localhost:5000/api/diabetes/", {
+  method: "POST",
+  headers: {
+    "Authorization": `Bearer ${token}`, // only auth header
+  },
+  body: formData, // send FormData directly
+});
+
+
+// ✅ Reset form fields
+resetForm();
+
+// ✅ Also clear localStorage for persisted states
+localStorage.removeItem("diabetesType");
+localStorage.removeItem("bloodSugarControl");
+localStorage.removeItem("footUlcers");
+localStorage.removeItem("symptoms");
+localStorage.removeItem("symptomDuration");
+localStorage.removeItem("location");
+localStorage.removeItem("painLevel");
+localStorage.removeItem("diabetesDuration");
+localStorage.removeItem("notes");
+
+      if (!response.ok) {
+        const errText = await response.text();
+        throw new Error(`Error ${response.status}: ${errText}`);
+      }
+
+      const data = await response.json();
+      console.log("API Response:", data);
+      alert("Your information has been submitted successfully!");
+    } catch (error) {
+      console.error("Submission failed:", error);
+      alert("Failed to submit data. Please try again.");
     }
-
-    if (selectedFile) {
-      formData.append("file", selectedFile);
-    }
-
-    const response = await fetch("http://localhost:5000/api/diabetes/", {
-      method: "POST",
-      headers: {
-        Authorization: `Bearer ${localStorage.getItem("token")}`,
-      },
-      body: formData,
-    });
-
-    if (!response.ok) {
-      const errText = await response.text();
-      throw new Error(`Error ${response.status}: ${errText}`);
-    }
-
-    const data = await response.json();
-    console.log("API Response:", data);
-    alert("Your information has been submitted successfully!");
-
-    // ✅ Reset states & localStorage
-    setDiabetesType("");
-    setBloodSugarControl("");
-    setFootUlcers("");
-    setSymptoms("");
-    setSymptomDuration("");
-    setLocation("");
-    setPainLevel(null);
-    setDiabetesDuration("");
-    setNotes("");
-    setSelectedFile(null);
-    setPreviewUrl(null);
-
-    // ✅ Also clear localStorage for form fields
-    [
-      "diabetesType",
-      "bloodSugarControl",
-      "footUlcers",
-      "symptoms",
-      "symptomDuration",
-      "location",
-      "painLevel",
-      "diabetesDuration",
-      "notes",
-    ].forEach((key) => localStorage.removeItem(key));
-
-  } catch (error) {
-    console.error("Submission failed:", error);
-    alert("Failed to submit data. Please try again.");
-  }
-};
+  };
 
   return (
     <div className="">
@@ -182,7 +141,7 @@ const DiabetesInfoForm: React.FC = () => {
             <span className="inline-block w-5 h-5 bg-black rounded-full" />{" "}
             Patient Dashboard
           </h1>
-          <div className="flex items-center gap-4">
+          {/* <div className="flex items-center gap-4">
             <div
               onClick={() => (window.location.href = "/profile")}
               className="bg-gradient-to-br from-white to-black rounded-lg  w-[50px] h-[50px] flex flex-col items-center justify-center text-black font-bold shadow-md cursor-pointer transform transition-transform duration-300 hover:scale-110"
@@ -196,7 +155,7 @@ const DiabetesInfoForm: React.FC = () => {
               />
             </div>
             <p className="m-0 text-sm">Profile</p>
-          </div>
+          </div> */}
           <div className="flex items-center gap-4">
             <div
               onClick={() => (window.location.href = "/feedback")}
@@ -227,9 +186,14 @@ const DiabetesInfoForm: React.FC = () => {
             </div>
             <p className="m-0 text-sm">Recommendation</p>
 
-            <button className="px-4 py-1 border rounded-md hover:bg-gray-100">
-              Logout
-            </button>
+
+<Link 
+  href="/login" 
+  className="px-4 py-1 border rounded-md hover:bg-gray-100 inline-block text-center"
+>
+  Logout
+</Link>
+
           </div>
         </header>
 
@@ -524,7 +488,7 @@ const DiabetesInfoForm: React.FC = () => {
           >
             <button
               type="submit"
-              className="w-full bg-black text-white text-lg font-medium py-3 rounded-lg hover:bg-gray-800 transition"
+              className="w-full bg-black text-white text-lg font-medium py-3 rounded-lg hover:bg-gray-800 transition cursor-pointer"
             >
               Submit for Medical Review
             </button>

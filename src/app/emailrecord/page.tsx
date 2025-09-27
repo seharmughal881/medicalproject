@@ -94,7 +94,7 @@ export default function DoctorDashboard() {
                 <span className="text-green-400">{email}</span>
                 <button
                   onClick={() => handleDelete(email)}
-                  className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700"
+                  className="px-3 py-1 bg-red-600 text-white text-sm rounded hover:bg-red-700 cursor-pointer"
                 >
                   Delete
                 </button>
