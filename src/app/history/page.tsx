@@ -69,10 +69,12 @@ export default function ViewHistory() {
 
       setLoading(true);
 
-      const url = `http://localhost:5000/api/diabetes/byEmail/${encodeURIComponent(
+      // const url = `http://localhost:5000/api/diabetes/byEmail/${encodeURIComponent(
+      //   email.trim()
+      // )}`;
+ const url = `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/diabetes/byEmail/${encodeURIComponent(
         email.trim()
       )}`;
-
       const response = await axios.get(url, {
         headers: {
           Authorization: `Bearer ${token}`,

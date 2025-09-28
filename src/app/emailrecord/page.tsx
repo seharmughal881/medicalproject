@@ -15,7 +15,8 @@ export default function DoctorDashboard() {
     // 🔹 Step 2: API se current user fetch karo
     const fetchPatientEmail = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/auth/patient", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/patient`, {
+          // "http://localhost:5000/api/auth/patient"
           method: "GET",
           headers: {
             "Content-Type": "application/json",

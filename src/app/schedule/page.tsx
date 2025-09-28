@@ -146,7 +146,8 @@ export default function AvailabilitySchedule() {
         slot, // optional: server can also update availability based on iso
       };
 
-      const res = await axios.post("http://localhost:5000/api/appointments/create", payload, {
+      const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/appointments/create`, payload, {
+        // "http://localhost:5000/api/appointments/create"
         headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
       });
 

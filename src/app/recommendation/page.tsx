@@ -17,7 +17,8 @@ export default function DoctorsRecommendations() {
   useEffect(() => {
     const fetchDoctors = async () => {
       try {
-        const response = await fetch("http://localhost:5000/api/auth/doctors", {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/doctors`, {
+  // "http://localhost:5000/api/auth/doctors"
           method: "GET",
           headers: {
             "Content-Type": "application/json",
