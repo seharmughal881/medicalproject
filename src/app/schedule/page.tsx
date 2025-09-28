@@ -83,7 +83,8 @@ export default function AvailabilitySchedule() {
       }
 
       await axios.post(
-        "http://localhost:5000/api/availability/save",
+        // "http://localhost:5000/api/availability/save",
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/availability/save`,
         { doctorId: userId, slots: availability },
         {
           headers: {
