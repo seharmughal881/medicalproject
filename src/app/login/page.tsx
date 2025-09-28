@@ -239,14 +239,16 @@ const LoginPage: React.FC = () => {
       formData.email.toLowerCase() !== "seharmughal881@gmail.com"
     ) {
       alert(
-        "Only 'seharmughal881@gmail.com' can login as Doctor. Please choose Patient role instead."
+        "Please choose Patient role instead of Doctor."
       );
       setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch("http://localhost:5000/api/auth/login", {
+      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
+        
+        // "http://localhost:5000/api/auth/login"
         method: "POST",
         headers: {
           "Content-Type": "application/json",

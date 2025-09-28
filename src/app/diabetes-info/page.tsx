@@ -95,7 +95,8 @@ const DiabetesInfoForm: React.FC = () => {
 
       
       const token = localStorage.getItem("token"); // after login you must save token 
-            const response = await fetch("http://localhost:5000/api/diabetes/", {
+            const response = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/diabetes/`, {
+              // "http://localhost:5000/api/diabetes/"
   method: "POST",
   headers: {
     "Authorization": `Bearer ${token}`, // only auth header
