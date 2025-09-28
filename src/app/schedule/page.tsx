@@ -37,7 +37,8 @@ export default function AvailabilitySchedule() {
       }
       const userId = localStorage.getItem("userId");
       const res = await axios.get(
-        `http://localhost:5000/api/availability/${userId}`,
+        // `http://localhost:5000/api/availability/${userId}`,
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/availability/${userId}`,
         { headers: { Authorization: `Bearer ${token}` } }
       );
       if (res.data && res.data.slots) {
