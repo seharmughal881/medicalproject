@@ -273,7 +273,8 @@ const LoginPage: React.FC = () => {
 
     // ✅ Save token & userId
     localStorage.setItem("token", data.token);
-    localStorage.setItem("userId", data.userId);
+    // localStorage.setItem("userId", data.userId);
+localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
 
     alert("Login successful!");
 
