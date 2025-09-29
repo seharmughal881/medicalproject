@@ -23,9 +23,13 @@ export default function AvailabilitySchedule() {
   const [patientEmail, setPatientEmail] = useState("");
   const [patientPhone, setPatientPhone] = useState("");
   const [bookingLoading, setBookingLoading] = useState(false);
-
+    const [userId, setUserId] = useState<string | null>(null);
   useEffect(() => {
     fetchAvailability();
+    const user = JSON.parse(localStorage.getItem("user") || "{}");
+  if (user && (user.id || user._id)) {
+    setUserId(user.id || user._id);   // dono case handle ho gaye
+  }
   }, []);
 
   const fetchAvailability = async () => {
@@ -147,6 +151,10 @@ export default function AvailabilitySchedule() {
         scheduledAt,
         slot, // optional: server can also update availability based on iso
       };
+
+console.log("userId =>", userId);
+console.log("payload =>", payload);
+
 
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/appointments/create`, payload, {
         // "http://localhost:5000/api/appointments/create"
