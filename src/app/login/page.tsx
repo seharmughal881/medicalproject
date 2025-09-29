@@ -20,13 +20,27 @@
 //   ) => {
 //     setFormData({ ...formData, [e.target.name]: e.target.value });
 //   };
-
+// // real
 //   const handleSubmit = async (e: React.FormEvent) => {
 //     e.preventDefault();
 //     setLoading(true);
 
+//     // ✅ Doctor role restriction (frontend level)
+//     if (
+//       (formData.role === "Doctor" || formData.role === "doctor") &&
+//       formData.email.toLowerCase() !== "seharmughal881@gmail.com"
+//     ) {
+//       alert(
+//         "Please choose Patient role instead of Doctor."
+//       );
+//       setLoading(false);
+//       return;
+//     }
+
 //     try {
-//       const res = await fetch("http://localhost:5000/api/auth/login", {
+//       const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
+        
+//         // "http://localhost:5000/api/auth/login"
 //         method: "POST",
 //         headers: {
 //           "Content-Type": "application/json",
@@ -35,7 +49,9 @@
 //           email: formData.email,
 //           password: formData.password,
 //         }),
+       
 //       });
+
 //       const data = await res.json();
 
 //       if (!res.ok) {
@@ -43,46 +59,36 @@
 //         setLoading(false);
 //         return;
 //       }
+//     // localStorage.setItem("token", data.token); /////////////////////////////////////////////////////////////////
+//     //   alert("Login successful!");
+//   // const data = res.data;
 
-//       // ✅ Save token in localStorage
-//       localStorage.setItem("token", data.token);
-//       // function bana lo login file me
-// // Inside handleSubmit after successful login:
-// if (data.user.role === "patient" || data.user.role === "Patient") {
-//   // save in array instead of single value
-//   const stored = localStorage.getItem("patientEmails");
-//   const arr: string[] = stored ? JSON.parse(stored) : [];
-//   if (!arr.includes(data.user.email)) { // avoid duplicates
-//     arr.push(data.user.email);
-//     localStorage.setItem("patientEmails", JSON.stringify(arr));
-//   }
+//     // ✅ Save token & userId
+//     localStorage.setItem("token", data.token);
+//     // localStorage.setItem("userId", data.userId);
+// localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
 
-//   router.push("/diabetes-info");
-// }
+//     alert("Login successful!");
 
-//       alert("Login successful!");
 
-//       // ✅ role-based redirect (from backend response)
+//       // ✅ role-based redirect
 //       if (data.user.role === "patient" || data.user.role === "Patient") {
-//           localStorage.setItem("patientEmail", data.user.email);
-//           // After login response
+//         localStorage.setItem("patientEmail", data.user.email);
 
+//         // also maintain array of patients
+//         const stored = localStorage.getItem("patientEmails");
+//         const arr: string[] = stored ? JSON.parse(stored) : [];
+//         if (!arr.includes(data.user.email)) {
+//           arr.push(data.user.email);
+//           localStorage.setItem("patientEmails", JSON.stringify(arr));
+//         }
 
 //         router.push("/diabetes-info");
-        
-//       } 
-//       // else if (data.user.role === "doctor" || data.user.role === "Doctor") {
-//       //   router.push("/doctor");    
-//       // } 
-//       else
-//          if (data.user.role === "doctor" || data.user.role === "Doctor") {
-//   // doctor ka sara data save
-//   localStorage.setItem("doctorData", JSON.stringify(data.user));
-
-//   router.push("/doctor");  // redirect doctor dashboard pe
-// }
-
-//       else if (data.user.role === "admin" || data.user.role === "Admin") {
+//       } else if (data.user.role === "doctor" || data.user.role === "Doctor") {
+//         // ✅ doctor already restricted above
+//         localStorage.setItem("doctorData", JSON.stringify(data.user));
+//         router.push("/doctor");
+//       } else if (data.user.role === "admin" || data.user.role === "Admin") {
 //         router.push("/dashboard/admin");
 //       }
 //     } catch (error) {
@@ -92,6 +98,8 @@
 //       setLoading(false);
 //     }
 //   };
+
+
 
 //   return (
 //     <div
@@ -109,12 +117,12 @@
 //       {/* Header */}
 //       <header className="w-full bg-black py-5 text-center text-white z-10 flex items-center justify-center space-x-3">
 //         <Image
-//     src="/assets/dfu_logo.jpeg"
-//     alt="DFU Logo"
-//     width={48}   // required by Next.js
-//     height={48}  // required by Next.js
-//     className="w-12 h-auto"
-//   />
+//           src="/assets/dfu_logo.jpeg"
+//           alt="DFU Logo"
+//           width={48}
+//           height={48}
+//           className="w-12 h-auto"
+//         />
 //         <h1 className="text-2xl font-bold">
 //           Diabetic Foot Ulcer Detection (DFU)
 //         </h1>
@@ -144,7 +152,9 @@
 
 //             {/* Password */}
 //             <div>
-//               <label className="block text-sm mb-1 font-semibold">Password:</label>
+//               <label className="block text-sm mb-1 font-semibold">
+//                 Password:
+//               </label>
 //               <div className="relative">
 //                 <input
 //                   type={showPassword ? "text" : "password"}
@@ -205,7 +215,6 @@
 // export default LoginPage;
 
 
-
 "use client";
 import { useState } from "react";
 import { useRouter } from "next/navigation";
@@ -228,37 +237,32 @@ const LoginPage: React.FC = () => {
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-// real
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
 
-    // ✅ Doctor role restriction (frontend level)
     if (
       (formData.role === "Doctor" || formData.role === "doctor") &&
       formData.email.toLowerCase() !== "seharmughal881@gmail.com"
     ) {
-      alert(
-        "Please choose Patient role instead of Doctor."
-      );
+      alert("Please choose Patient role instead of Doctor.");
       setLoading(false);
       return;
     }
 
     try {
-      const res = await fetch(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`, {
-        
-        // "http://localhost:5000/api/auth/login"
-        method: "POST",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          email: formData.email,
-          password: formData.password,
-        }),
-       
-      });
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_URL}/api/auth/login`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            email: formData.email,
+            password: formData.password,
+          }),
+        }
+      );
 
       const data = await res.json();
 
@@ -267,23 +271,21 @@ const LoginPage: React.FC = () => {
         setLoading(false);
         return;
       }
-    // localStorage.setItem("token", data.token); /////////////////////////////////////////////////////////////////
-    //   alert("Login successful!");
-  // const data = res.data;
 
-    // ✅ Save token & userId
-    localStorage.setItem("token", data.token);
-    // localStorage.setItem("userId", data.userId);
-localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
+      // ✅ Save token & IDs
+      localStorage.setItem("token", data.token);
+      localStorage.setItem("userId", data.user._id);
 
-    alert("Login successful!");
+      // ✅ Important for appointment creation (Doctor ID save karo)
+      if (data.user.role === "doctor" || data.user.role === "Doctor") {
+        localStorage.setItem("doctorId", data.user._id);
+      }
 
+      alert("Login successful!");
 
-      // ✅ role-based redirect
       if (data.user.role === "patient" || data.user.role === "Patient") {
         localStorage.setItem("patientEmail", data.user.email);
 
-        // also maintain array of patients
         const stored = localStorage.getItem("patientEmails");
         const arr: string[] = stored ? JSON.parse(stored) : [];
         if (!arr.includes(data.user.email)) {
@@ -293,7 +295,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
 
         router.push("/diabetes-info");
       } else if (data.user.role === "doctor" || data.user.role === "Doctor") {
-        // ✅ doctor already restricted above
         localStorage.setItem("doctorData", JSON.stringify(data.user));
         router.push("/doctor");
       } else if (data.user.role === "admin" || data.user.role === "Admin") {
@@ -307,8 +308,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
     }
   };
 
-
-
   return (
     <div
       className="min-h-screen flex flex-col relative"
@@ -319,10 +318,8 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
         backgroundRepeat: "no-repeat",
       }}
     >
-      {/* Overlay */}
       <div className="absolute inset-0 bg-black opacity-50"></div>
 
-      {/* Header */}
       <header className="w-full bg-black py-5 text-center text-white z-10 flex items-center justify-center space-x-3">
         <Image
           src="/assets/dfu_logo.jpeg"
@@ -336,7 +333,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
         </h1>
       </header>
 
-      {/* Form */}
       <div className="flex flex-1 items-center justify-center px-4">
         <div className="relative w-full max-w-md bg-white text-black p-8 rounded-xl shadow-lg border border-black">
           <h2 className="text-xl font-bold text-center mb-6 border-b border-black pb-2">
@@ -344,7 +340,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
           </h2>
 
           <form onSubmit={handleSubmit} className="space-y-4">
-            {/* Email */}
             <div>
               <label className="block text-sm mb-1 font-semibold">Email:</label>
               <input
@@ -358,7 +353,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
               />
             </div>
 
-            {/* Password */}
             <div>
               <label className="block text-sm mb-1 font-semibold">
                 Password:
@@ -383,7 +377,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
               </div>
             </div>
 
-            {/* Role */}
             <div>
               <label className="block text-sm mb-1 font-semibold">Role:</label>
               <select
@@ -398,7 +391,6 @@ localStorage.setItem("userId", data.user._id);  // ✅ yeh ID doctor ki hai
               </select>
             </div>
 
-            {/* Submit */}
             <button
               type="submit"
               disabled={loading}

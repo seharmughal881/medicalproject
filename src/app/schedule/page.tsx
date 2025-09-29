@@ -150,7 +150,8 @@ export default function AvailabilitySchedule() {
 
       const res = await axios.post(`${process.env.NEXT_PUBLIC_BACKEND_URL}/api/appointments/create`, payload, {
         // "http://localhost:5000/api/appointments/create"
-        headers: { Authorization: `Bearer ${token}`, "Content-Type": "application/json" },
+        headers: { Authorization: `Bearer ${token}`, 
+        "Content-Type": "application/json" },
       });
 
       alert("Appointment created — reminders will be sent automatically (3d, 1d, 3h).");
