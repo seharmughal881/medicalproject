@@ -228,7 +228,7 @@ const LoginPage: React.FC = () => {
   ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
-
+// real
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
@@ -257,6 +257,7 @@ const LoginPage: React.FC = () => {
           email: formData.email,
           password: formData.password,
         }),
+       
       });
 
       const data = await res.json();
@@ -266,8 +267,16 @@ const LoginPage: React.FC = () => {
         setLoading(false);
         return;
       }
-    localStorage.setItem("token", data.token); /////////////////////////////////////////////////////////////////
-      alert("Login successful!");
+    // localStorage.setItem("token", data.token); /////////////////////////////////////////////////////////////////
+    //   alert("Login successful!");
+  // const data = res.data;
+
+    // ✅ Save token & userId
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("userId", data.userId);
+
+    alert("Login successful!");
+
 
       // ✅ role-based redirect
       if (data.user.role === "patient" || data.user.role === "Patient") {
@@ -296,6 +305,8 @@ const LoginPage: React.FC = () => {
       setLoading(false);
     }
   };
+
+
 
   return (
     <div
